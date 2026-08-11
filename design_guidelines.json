@@ -1,0 +1,167 @@
+{
+  "app_name": "INSIDE OUT",
+  "personality": "7 Dark-First Utility structure with 6 Glass / Luxe surfaces",
+  "personality_one_liner": "A cinematic, live-operational command center blending deep obsidian void with precise, high-contrast engineering metrics.",
+  "color": {
+    "surface": "#090D14",
+    "onSurface": "#F8FAFC",
+    "surfaceSecondary": "#151B23",
+    "onSurfaceSecondary": "#CBD5E1",
+    "surfaceTertiary": "#212836",
+    "onSurfaceTertiary": "#94A3B8",
+    "surfaceInverse": "#F8FAFC",
+    "onSurfaceInverse": "#090D14",
+    "brand": "#00E5FF",
+    "brandPrimary": "#00E5FF",
+    "onBrandPrimary": "#090D14",
+    "brandSecondary": "#00B8D4",
+    "onBrandSecondary": "#F8FAFC",
+    "brandTertiary": "rgba(0, 229, 255, 0.12)",
+    "onBrandTertiary": "#00E5FF",
+    "success": "#00E5FF",
+    "onSuccess": "#090D14",
+    "warning": "#FBBF24",
+    "onWarning": "#090D14",
+    "error": "#F87171",
+    "onError": "#090D14",
+    "info": "#60A5FA",
+    "onInfo": "#090D14",
+    "unknown": "#64748B",
+    "onUnknown": "#F8FAFC",
+    "border": "#30363D",
+    "borderStrong": "#00E5FF",
+    "divider": "#1F2937"
+  },
+  "typography": {
+    "displayFontFamily": "Rajdhani",
+    "textFontFamily": "IBM Plex Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Handle spacing correctly dont have extra spaces where its not required, handle padding and margin corectly and subtle for buttons and components",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 4,
+    "md": 8,
+    "lg": 16,
+    "pill": 999
+  },
+  "shadow_tier": 0,
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Sticky headers over scrolling content",
+      "Bottom tab bar (when content scrolls behind it)",
+      "Bottom-sheet headers and drag handles",
+      "Floating action buttons (FAB) expo-blur over a brandTertiary tinted bg"
+    ],
+    "dont's": [
+      "Every button",
+      "List rows",
+      "Form inputs"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Sign In / Sign Up",
+      "purpose": "Secure authentication portal for entering the engineering platform.",
+      "states": {
+        "loading": "Subtle cyan pulse around the submit button.",
+        "empty": "N/A",
+        "error": "Inline red validation text under the specific input field."
+      },
+      "layout": "Cinematic blueprint backdrop with a glassmorphic central login card. Single column layout. Inputs are precise and technical with thin borders. Submit button acts as the primary focal point."
+    },
+    {
+      "name": "Home",
+      "purpose": "Live operational dashboard highlighting core scan actions, XP progress, and active projects.",
+      "states": {
+        "loading": "Skeleton UI for recent projects and stats.",
+        "empty": "Illustration of an un-scanned blueprint with 'Scan your first device' CTA.",
+        "error": "Data fetch failure state with a 'Recalibrate' retry button."
+      },
+      "layout": "Stacked modules. Top section: High-impact user profile/XP summary. Mid section: 3 primary action cards (Scan, Reverse Engineer, Test) spanning horizontally with horizontal scroll or 2x2 grid if compact. Bottom section: List of recent projects. Clean structural dividers."
+    },
+    {
+      "name": "Camera Capture",
+      "purpose": "A precision-focused interface for capturing images of physical devices for AI analysis.",
+      "states": {
+        "loading": "Scanning reticle animating and analyzing captured frame.",
+        "empty": "Camera preview ready.",
+        "error": "Error toast prompting user to improve lighting or angle."
+      },
+      "layout": "Full-screen camera viewport. Overlaying the viewport: technical corner markers, a central crosshair, and single-path navigation for taking the shot. Bottom bar contains the shutter button and gallery access, styled as a tactical instrument panel."
+    },
+    {
+      "name": "AI Analysis Result",
+      "purpose": "Displays the AI's breakdown of the captured device with confidence scoring and layer exploration.",
+      "states": {
+        "loading": "Simulated AI processing progress bar breaking down components.",
+        "empty": "No component detected, prompt to rescan.",
+        "error": "AI failure message with retry button."
+      },
+      "layout": "Viewport prioritizes the processed image with overlay annotations. Status badges (VERIFIED, INFERRED) color-coded (Cyan for verified, Yellow for inferred). Below the image: INSIDE OUT LAYERS vertical stepper or collapsible panels to drill down from Surface (Layer 1) to Build (Layer 8)."
+    },
+    {
+      "name": "Bill of Materials (BOM) & Circuit Viewer",
+      "purpose": "Detailed tabular breakdown of components and costs, alongside a technical diagram.",
+      "states": {
+        "loading": "Tabular skeleton rows loading cost data.",
+        "empty": "No components mapped yet.",
+        "error": "Failed to load BOM data."
+      },
+      "layout": "Progressive disclosure approach. A mobile-first editable table grouped by categories (e.g., Microcontrollers, Resistors). Tapping a row expands to show detailed costs and vendor info. Sticky summary card at the bottom displaying the total estimated cost."
+    }
+  ],
+  "images": {
+    "camera_overlay_guide": {
+      "url": "https://images.unsplash.com/photo-1562408590-e32931084e23?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NDh8MHwxfHNlYXJjaHwxfHwlMjJtb3RoZXJib2FyZCUyMFBDQiUyMG1hY3JvJTIwc2hvdCUyMnxlbnwwfHx8fDE3ODYxNzYxOTZ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Macro shot of a complex motherboard to be used as a background texture for the scanner empty state"
+    },
+    "project_blueprint_bg": {
+      "url": "https://images.pexels.com/photos/4172287/pexels-photo-4172287.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Technical design blueprint to be used subtly blended behind project cards"
+    },
+    "robotics_layer_example": {
+      "url": "https://images.unsplash.com/photo-1516192518150-0d8fee5425e3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzV8MHwxfHNlYXJjaHwxfHwlMjJyb2JvdGljcyUyMG1lY2hhbmlzbSUyMGNvbXBvbmVudCUyMnxlbnwwfHx8fDE3ODYxNzYxOTZ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Robotics mechanism component showing inner workings"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Follow the Dark-First Utility guidelines rigorously. The app should feel like a high-end engineering diagnostic tool. Avoid any soft, playful, or generic AI aesthetics.",
+    "Use deep obsidian/slate backgrounds (#090D14 and #151B23) with electric cyan (#00E5FF) exclusively for primary accents, active states, and VERIFIED badges.",
+    "Typography must enforce the technical feel: Use Rajdhani for display/metrics and IBM Plex Sans for body text. Adhere strictly to the 500 max font weight rule.",
+    "Ensure every screen has an AI Engineer Chat Floating Action Button (FAB). Use glassmorphism (expo-blur) over a brandTertiary tinted background for the FAB.",
+    "For the AI Analysis Result screen, implement a progressive disclosure architecture. Use the INSIDE OUT LAYERS (1-8) as a vertical stepper or segmented control. Tap-to-drill-down is essential.",
+    "In the BOM Table, group line items by category and allow rows to expand for detail, matching the mobile-first estimation layout from web search research.",
+    "For all background images, apply the mandatory gradient-to-dark scrim pattern (transparent to >=70% surfaceInverse) to guarantee text legibility.",
+    "Status indicators (VERIFIED/INFERRED/ESTIMATED/UNKNOWN) should be color-coded strictly according to the status token colors (Cyan, Yellow, Yellow, Grey) and remain highly legible."
+  ]
+}

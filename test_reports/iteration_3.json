@@ -1,0 +1,36 @@
+{
+  "summary": "Iteration 3 — multi-Claude-model selection surface fully verified. 12/12 targeted backend tests passed in 99.57s against public URL (serial -n 0). GET /api/models returns default=claude-sonnet-4-6 with all 4 model IDs (sonnet-5, sonnet-4-6, haiku-4-5-20251001, opus-4-7) each carrying id/label/tier/desc; public (bogus auth header still 200). PATCH /api/auth/preferences: 401 without token, 400 for gpt-4, 200 for haiku-4-5-20251001 with /api/auth/me reflecting the change. POST /api/analyze verified in three model resolutions on real 25KB PCB JPEG fixture — explicit haiku (model_used=haiku), omitted-with-preferred (model_used=haiku via user pref), invalid 'foo' soft-falls-back (model_used=haiku, NOT 'foo'). POST /api/chat with model=claude-opus-4-7 streams SSE deltas + done and persists both user+assistant history. Regression: new user with no preferred_model + no analyze payload model → project.model_used == claude-sonnet-4-6 (default). Cleanup: seeded user test@insideout.app preferred_model reset to claude-sonnet-4-6 and all 3 iteration projects deleted, per instructions.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_model_selection.py",
+    "/app/backend/tests/conftest.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py:77-90 CLAUDE_MODELS registry + resolve_model() are clean: explicit-valid > user.preferred_model > DEFAULT_CLAUDE_MODEL. Behavior matches spec including intentional soft-ignore of invalid explicit model.",
+    "server.py:166-173 /api/models is correctly exposed without get_current_user dependency (public).",
+    "server.py:175-187 PATCH /api/auth/preferences validates preferred_model against CLAUDE_MODELS (400 on invalid) and returns fresh _user_public. experience_level is also patchable — good.",
+    "server.py:282 project_doc persists model_used verbatim from resolved model_id (never raw body.model), ensuring invalid client input can never leak into stored records.",
+    "server.py:335 chat_stream uses same resolve_model helper — consistent behavior across analyze and chat.",
+    "_user_public defaults preferred_model to DEFAULT_CLAUDE_MODEL when the Mongo doc lacks the field — good backward compatibility for pre-iteration-3 users."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_model_selection.py (new — 12 tests covering /api/models, preferences, analyze × 3 model paths, chat SSE with opus, fresh-user default regression, teardown)"
+  ],
+  "success_rate": {"backend": "100% (12/12)", "frontend": "not requested"},
+  "seed_data_creation": "One fresh throwaway user test_iter3_<hex>@insideout.app + one project (default-model regression). Persistent test@insideout.app used for pref/analyze/chat tests: preferred_model reset to claude-sonnet-4-6 at teardown; 3 test projects (explicit-haiku, omitted, invalid) deleted at teardown per instructions.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Re-run with: EXPO_PUBLIC_BACKEND_URL=<public url> pytest /app/backend/tests/test_model_selection.py -v -n 0 --junitxml=/app/test_reports/pytest/pytest_results.xml. Requires /tmp/test_image_b64.txt (25KB synthetic PCB JPEG, present). Test file is idempotent — cleans up its own projects and resets seeded user's preferred_model. Full iteration-1 regression suite in /app/backend/tests/test_backend.py was NOT re-run per iteration-3 instructions; only the model-selection surface + one fresh-user default sanity check was executed.",
+  "rca_of_issue": "N/A — no bugs found; multi-model implementation is spec-compliant end-to-end."
+}

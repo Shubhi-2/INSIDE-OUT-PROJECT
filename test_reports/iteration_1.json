@@ -1,0 +1,46 @@
+{
+  "summary": "Backend-only testing for INSIDE OUT MVP. All 13 pytest tests passed (100%) in 45s against public URL. Covered: auth (register/duplicate/login/me + negative), Claude Sonnet 4.6 vision /api/analyze (schema, layers 1-8, BOM, rebuild_challenge, confidence labels VERIFIED/INFERRED/ESTIMATED/UNKNOWN), projects list/get/404, chat SSE stream (deltas+done) + persistence in GET /api/chat/{id}, auth isolation (user B -> 404 on user A's project), and DELETE cascade (project + chats).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/chat/{project_id}", "issue": "Endpoint returns 200 with [] for a project_id the caller doesn't own or that doesn't exist (no 404 check). Currently only used to verify cascade delete; consider adding ownership check for defense in depth."},
+      {"endpoint": "POST /api/analyze", "issue": "Increments users.projects_count by 1 on every analyze even when the same project_id is passed (only skipped when project_id was already supplied in the request). Cosmetic; XP still +25 each time."},
+      {"endpoint": "POST /api/auth/register", "issue": "Password strength / minimum length is not validated (empty or 1-char passwords accepted by Pydantic)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_backend.py",
+    "/app/backend/tests/conftest.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(Optional) Add Pydantic constraint min_length=8 on RegisterIn.password.",
+    "(Optional) Add 404 to GET /api/chat/{project_id} when project not owned by user.",
+    "(Optional) Skip incrementing projects_count on re-analyze of an existing project_id."
+  ],
+  "critical_code_review_comments": [
+    "server.py is a single 377-line file — acceptable for MVP; consider splitting auth/analyze/chat/projects into modules as it grows past 700 lines.",
+    "MongoDB _id is properly excluded across all read endpoints (good).",
+    "SSE chat writes user message BEFORE streaming and assistant message AFTER — order preserved via created_at timestamps (verified in test).",
+    "Uses UUID-based ids, not ObjectId, throughout — good.",
+    "JWT_SECRET falls back to 'dev-secret' in code — ensure prod .env overrides it (already the case in this env)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/conftest.py (new)",
+    "/app/backend/tests/test_backend.py (new)",
+    "/app/memory/test_credentials.md (updated)",
+    "/tmp/test_image_b64.txt (seed test image — synthetic PCB-like JPEG with features)"
+  ],
+  "success_rate": {"backend": "100% (13/13)", "frontend": "not tested (backend-only per request)"},
+  "seed_data_creation": "Per-run randomised test users (test_<hex>@insideout.app, userb_<hex>@insideout.app) + one persistent user test@insideout.app / testpass123. Test projects are created via /api/analyze and cleaned up by test_delete_project_cascades_chats. A synthetic 400x300 JPEG (PCB with traces, IC, resistor, capacitor, LED) is generated at /tmp/test_image_b64.txt and used for analyze tests.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Run backend tests with: EXPO_PUBLIC_BACKEND_URL=<public url> pytest /app/backend/tests/test_backend.py -v -n 0 --junitxml=/app/test_reports/pytest/pytest_results.xml. IMPORTANT: pytest.ini pins -n 2 --dist loadscope; tests share state across classes via pytest.<attr> so MUST run with -n 0. If /tmp/test_image_b64.txt is missing, regenerate a small (~20KB) JPEG with visible technical features (PIL script in test log). Analyze endpoint takes 15-40s due to Claude Sonnet 4.6 vision.",
+  "rca_of_issue": "N/A — no failing flows. Initial test run failed only due to pytest-xdist parallel workers not sharing pytest.<attr> state; resolved by adding -n 0 to run serially (state flows Auth -> Analyze -> Projects -> Chat -> Delete)."
+}
